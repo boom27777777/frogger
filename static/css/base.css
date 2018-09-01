@@ -1,0 +1,11 @@
+div#app-container {
+    width: 100%;
+}
+
+div.hidden {
+    display: none;
+}
+
+canvas {
+    display: block;
+}
