@@ -143,8 +143,8 @@ function TileMap(canvas, blob) {
 
 function Application(blob) {
     this.canvas = document.getElementById('application');
-    this.width = blob.width * blob.tilewidth;
-    this.height = blob.height * blob.tileheight;
+    this.canvas.width = blob.width * blob.tilewidth;
+    this.canvas.height = blob.height * blob.tileheight;
 
     this.tilemap = new TileMap(this.canvas, blob);
 
@@ -170,11 +170,11 @@ function Application(blob) {
 
     window.addEventListener('resize', this.resize());
     this.canvas.addEventListener('mousemove', this.mouseMove());
-    window.dispatchEvent(new Event('resize'));
 }
 
 window.onload = function () {
     get('/static/maps/example.json', function (response) {
-        let app = new Application(JSON.parse(response))
+        let app = new Application(JSON.parse(response));
+        app.tilemap.render();
     });
 };
