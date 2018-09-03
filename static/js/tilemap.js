@@ -20,6 +20,16 @@ function Lock(number, callback) {
 
 }
 
+let images = {};
+function tileImage(path) {
+    let image = new Image();
+    image.src = '/static/maps/' + path;
+    if (images[image.src] === undefined) {
+        images[image.src] = image;
+    }
+    return image;
+}
+
 function TileMap(canvas, blob) {
     this.canvas = canvas;
     this.map = blob;
@@ -51,6 +61,9 @@ function TileMap(canvas, blob) {
             let path = '/static/maps/' + tileset.source;
             get(path, function (response) {
                 self.tileSets[tileset.firstgid] = JSON.parse(response);
+
+                // Preload image
+                tileImage(self.tileSets[tileset.firstgid].image);
                 lock.unlock();
             })
         });
@@ -62,8 +75,7 @@ function TileMap(canvas, blob) {
         let tileHeight = tileSet.tileheight;
         let image;
         if (tileGID > 0) {
-            image = new Image();
-            image.src = '/static/maps/' + tileSet.image;
+            image = tileImage(tileSet.image);
         }
         else {
             return
