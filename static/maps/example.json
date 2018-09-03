@@ -1,0 +1,33 @@
+{ "height":10,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[24, 25, 25, 25, 25, 25, 25, 25, 25, 26, 47, 48, 48, 48, 48, 48, 48, 48, 48, 49, 47, 48, 119, 120, 120, 120, 120, 121, 48, 49, 47, 48, 142, 122, 123, 123, 124, 144, 48, 49, 47, 48, 142, 145, 143, 143, 147, 144, 48, 49, 47, 48, 142, 145, 143, 143, 147, 144, 48, 49, 47, 48, 142, 168, 169, 169, 170, 144, 48, 49, 47, 48, 165, 166, 166, 166, 166, 167, 48, 49, 47, 48, 48, 48, 48, 48, 11, 12, 13, 49, 70, 71, 71, 71, 71, 71, 71, 71, 71, 72],
+         "height":10,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.1.6",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "firstgid":1,
+         "source":"fantasy.json"
+        }, 
+        {
+         "firstgid":668,
+         "source":"debug.json"
+        }],
+ "tilewidth":32,
+ "type":"map",
+ "version":1,
+ "width":10
+}

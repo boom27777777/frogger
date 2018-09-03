@@ -1,15 +1,35 @@
-function TileMap(canvas, width, height) {
+function get(path, callback) {
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            callback(this.responseText)
+        }
+    };
+    xhttp.open('GET', path);
+    xhttp.send();
+}
+
+function Lock(number, callback) {
+    this.locks = number;
+    this.unlock = function () {
+        this.locks--;
+        if (this.locks === 0) {
+            callback();
+        }
+    }
+
+}
+
+function TileMap(canvas, blob) {
     this.canvas = canvas;
+    this.map = blob;
 
     this.ctx = this.canvas.getContext('2d');
-    this.tileset = {
-        1: '/static/img/grass.png'
-    };
 
-    this.tileSize = 50;
+    this.tileSize = 32;
 
-    this.height = 10;
-    this.width = 10;
+    this.height = this.map.height;
+    this.width = this.map.width;
 
     this.line = function (startX, startY, endX, endY) {
         this.ctx.beginPath();
@@ -23,23 +43,65 @@ function TileMap(canvas, width, height) {
         this.ctx.stroke()
     };
 
-    this.grid = function () {
-        for (let i = 0; i < this.rect.w; i += this.tileSize) {
-            for (let j = 0; j < this.rect.h; j += this.tileSize) {
-                let x = i;
-                let y = j;
-                let w = this.tileSize;
-                let h = this.tileSize;
+    this.loadTileSets = function () {
+        this.tileSets = {};
+        let self = this;
+        let lock = new Lock(this.map.tilesets.length, function () {self.render()});
+        this.map.tilesets.forEach(function (tileset) {
+            let path = '/static/maps/' + tileset.source;
+            get(path, function (response) {
+                self.tileSets[tileset.firstgid] = JSON.parse(response);
+                lock.unlock();
+            })
+        });
+    };
 
-                let grass = new Image();
-                grass.src = '/static/img/grass.png';
-                this.ctx.drawImage(grass, x, y, w, h);
-                this.box(x, y, w, h);
+    this.getTile = function (tileGID) {
+        let tileSet = this.tileSets[1]; //TODO: Determine the tile set a GID belongs to
+        let tileWidth = tileSet.tilewidth;
+        let tileHeight = tileSet.tileheight;
+        let image;
+        if (tileGID > 0) {
+            image = new Image();
+            image.src = '/static/maps/' + tileSet.image;
+        }
+        else {
+            return
+        }
+
+        let x = (tileGID - 1) % tileSet.columns * tileWidth;
+        let y = Math.floor((tileGID - 1) / tileSet.columns) * tileHeight;
+
+        return {x: x, y: y, w: tileWidth, h: tileHeight, image: image}
+    };
+
+    this.grid = function () {
+        let layer = this.map.layers[0];
+        for (let x = 0; x < layer.width; x++) {
+            for (let y = 0; y < layer.height; y++) {
+                let pos = this.getTile(layer.data[x + y * layer.width]);
+                if (pos !== undefined) {
+                    this.ctx.drawImage(
+                        pos.image,
+                        pos.x,
+                        pos.y,
+                        pos.w,
+                        pos.h,
+                        x * this.tileSize,
+                        y * this.tileSize,
+                        this.tileSize,
+                        this.tileSize
+                    )
+                }
             }
         }
     };
 
     this.render = function () {
+        if (this.tileSets === undefined) {
+            this.loadTileSets();
+            return
+        }
         this.rect = {
             x: 0,
             y: 0,
@@ -49,7 +111,6 @@ function TileMap(canvas, width, height) {
 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.grid();
-        this.line(this.rect.w, 0, this.rect.w, this.rect.h);
     };
 
     this.getCell = function (posX, posY) {
@@ -64,19 +125,23 @@ function TileMap(canvas, width, height) {
         this.ctx.strokeStyle = 'red';
         this.box(cell.x * this.tileSize, cell.y * this.tileSize, this.tileSize, this.tileSize);
         this.ctx.strokeStyle = 'black';
+        document.getElementById('coords').innerText = cell.x + ', ' + cell.y;
     };
 }
 
-function Application() {
+function Application(blob) {
     this.canvas = document.getElementById('application');
-    this.tilemap = this.tilemap = new TileMap(this.canvas);
+    this.width = blob.width * blob.tilewidth;
+    this.height = blob.height * blob.tileheight;
+
+    this.tilemap = new TileMap(this.canvas, blob);
 
     this.resize = function () {
         let self = this;
         return function () {
             let container = document.getElementById('app-container').getBoundingClientRect();
-            self.canvas.width = container.width;
-            self.canvas.height = window.innerHeight - container.top;
+            self.canvas.width = self.width;
+            self.canvas.height = self.height;
             self.tilemap.render();
         }
     };
@@ -97,5 +162,7 @@ function Application() {
 }
 
 window.onload = function () {
-    let app = new Application();
+    get('/static/maps/example.json', function (response) {
+        let app = new Application(JSON.parse(response))
+    });
 };

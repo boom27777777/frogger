@@ -1,0 +1,12 @@
+{ "columns":23,
+ "image":"..\/img\/fantasy.png",
+ "imageheight":928,
+ "imagewidth":736,
+ "margin":0,
+ "name":"fantasy",
+ "spacing":0,
+ "tilecount":667,
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset"
+}

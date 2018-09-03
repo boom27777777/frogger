@@ -28,7 +28,7 @@
     </div>
 </nav>
 {% block content %}{% endblock %}
-<script src="/static/js/bootstrap.js"></script>
+{#<script src="/static/js/bootstrap.js"></script>#}
 <script src="/static/js/tilemap.js"></script>
 </body>
 </html>
