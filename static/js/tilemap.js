@@ -158,9 +158,6 @@ function Application(blob) {
     this.resize = function () {
         let self = this;
         return function () {
-            let container = document.getElementById('app-container').getBoundingClientRect();
-            self.canvas.width = self.width;
-            self.canvas.height = self.height;
             self.tilemap.render();
         }
     };
