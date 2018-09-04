@@ -19,7 +19,13 @@
                     Selected Tile: <br><span id="coords">0, 0</span>
                 </div>
             </div>
+            <div class="card">
+                <p class="card-body">This is an example dice roller</p>
+                <canvas id="dice"></canvas>
+            </div>
         </div>
     </div>
     <script src="/static/js/tilemap.js"></script>
+    <script src="/static/js/three.min.js"></script>
+    <script src="/static/js/dice.js"></script>
 {% endblock %}
