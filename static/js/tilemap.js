@@ -42,6 +42,9 @@ function TileMap(canvas, blob) {
 
     this.ctx = this.canvas.getContext('2d');
 
+    // This is a tuning value needed when scaling the canvas
+    this.margin = {x: 0.5, y: 0.2, w: 0.5, h: 0.5};
+
     this.tileSize = 32;
 
     this.height = this.map.height;
@@ -107,14 +110,14 @@ function TileMap(canvas, blob) {
         if (pos !== undefined) {
             this.ctx.drawImage(
                 pos.image,
-                pos.x,
-                pos.y,
-                pos.w,
-                pos.h,
-                x * this.tileSize,
-                y * this.tileSize,
-                this.tileSize,
-                this.tileSize
+                pos.x + this.margin.x,
+                pos.y + this.margin.y,
+                pos.w - this.margin.x,
+                pos.h - this.margin.y,
+                x * this.tileSize - this.margin.w,
+                y * this.tileSize - this.margin.h,
+                this.tileSize + this.margin.w,
+                this.tileSize + this.margin.h
             )
         }
         if (this.showGridLines) {
