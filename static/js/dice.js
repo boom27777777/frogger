@@ -11,7 +11,7 @@ function DiceApplication() {
     // this.container.innerHTML = '';
     // this.container.appendChild(this.renderer.domElement);
 
-    this.camera = new THREE.PerspectiveCamera(45, 1.77, 0.2, 20000);
+    this.camera = new THREE.PerspectiveCamera(45, 1.0, 0.2, 20000);
     this.camera.position.z = 10;
     this.camera.position.y = 5;
     this.camera.lookAt(0, 0, 0);

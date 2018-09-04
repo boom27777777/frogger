@@ -1,27 +1,35 @@
 {% extends 'base.tpl' %}
 {% block content %}
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-md-8 col-sm12 card">
-                <div class="hidden">
-                    <img id="tile-grass" src="/static/img/fantasy.png" alt="grass">
+    <div class="container-fluid">
+        <div class="card-deck">
+            <div class="card shadow-sm">
+                <div class="card-header"><h5>Tiled Game Map</h5></div>
+                <div class="card-body">
+                    <div class="card-text">
+                        This is an example tile map to handle combat on.
+                    </div>
+                    Map made with <a href="https://www.mapeditor.org/">Tiled</a> using this
+                    <a href="/static/img/fantasy.png">Tile Set</a>
+                    <br>
                 </div>
-                <p class="card-body">This is an example tile map to handle combat on.</p>
-                <div id="app-container">
-                    <canvas id="application"></canvas>
-                </div>
-                <div class="card-footer">
+                <div class="app-container card-footer">
                     <input id="grid-lines" type="checkbox">
                     <label for="grid-lines">
                         Show Grid Lines
                     </label>
                     <br>
                     Selected Tile: <br><span id="coords">0, 0</span>
+                    <canvas id="application" width="320" height="320"></canvas>
                 </div>
             </div>
-            <div class="card">
-                <p class="card-body">This is an example dice roller</p>
-                <canvas id="dice"></canvas>
+            <div class="card shadow-sm">
+                <div class="card-header"><h5>3D Dice Roller</h5></div>
+                <div class="card-body">
+                    This is an example dice roller
+                </div>
+                <div class="app-container card-footer">
+                    <canvas id="dice" width="320" height="320"></canvas>
+                </div>
             </div>
         </div>
     </div>

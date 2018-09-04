@@ -86,9 +86,6 @@ function TileMap(canvas, blob) {
 
     this.getTile = function (tileGID) {
         let tileSet = this.tileSets[1]; //TODO: Determine the tile set a GID belongs to
-        if (tileSet === undefined) {
-            let a = 0;
-        }
         let tileWidth = tileSet.tilewidth;
         let tileHeight = tileSet.tileheight;
         let image;
@@ -157,6 +154,15 @@ function TileMap(canvas, blob) {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.box(0, 0, this.canvas.width, this.canvas.height);
         this.grid();
+        if (this.highlighted.x !== -1 && this.highlighted.y !== -1) {
+                    this.box(
+            this.highlighted.x * this.tileSize,
+            this.highlighted.y * this.tileSize,
+            this.tileSize,
+            this.tileSize,
+            'red'
+        );
+        }
     };
 
     this.getCell = function (posX, posY) {
@@ -168,13 +174,6 @@ function TileMap(canvas, blob) {
     this.highlight = function (posX, posY) {
         this.highlighted = this.getCell(posX, posY);
         this.render();
-        this.box(
-            this.highlighted.x * this.tileSize,
-            this.highlighted.y * this.tileSize,
-            this.tileSize,
-            this.tileSize,
-            'red'
-        );
         document.getElementById('coords').innerText = this.highlighted.x + ', ' + this.highlighted.y;
     };
 }
