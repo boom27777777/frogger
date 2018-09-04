@@ -21,6 +21,7 @@ function Lock(number, callback) {
 }
 
 let images = {};
+
 function tileImage(path) {
     let realPath = '/static/maps/' + path;
     let image;
@@ -47,6 +48,7 @@ function TileMap(canvas, blob) {
     this.width = this.map.width;
 
     this.showGridLines = false;
+    this.highlighted = {x: -1, y: -1};
 
     this.line = function (startX, startY, endX, endY) {
         this.ctx.beginPath();
@@ -66,7 +68,9 @@ function TileMap(canvas, blob) {
     this.loadTileSets = function () {
         this.tileSets = {};
         let self = this;
-        let lock = new Lock(this.map.tilesets.length, function () {self.render()});
+        let lock = new Lock(this.map.tilesets.length, function () {
+            self.render()
+        });
         this.map.tilesets.forEach(function (tileset) {
             let path = '/static/maps/' + tileset.source;
             get(path, function (response) {
@@ -82,6 +86,9 @@ function TileMap(canvas, blob) {
 
     this.getTile = function (tileGID) {
         let tileSet = this.tileSets[1]; //TODO: Determine the tile set a GID belongs to
+        if (tileSet === undefined) {
+            let a = 0;
+        }
         let tileWidth = tileSet.tilewidth;
         let tileHeight = tileSet.tileheight;
         let image;
@@ -98,32 +105,38 @@ function TileMap(canvas, blob) {
         return {x: x, y: y, w: tileWidth, h: tileHeight, image: image}
     };
 
+    this.drawTile = function (x, y, layer) {
+        let pos = this.getTile(layer.data[x + y * layer.width]);
+        if (pos !== undefined) {
+            this.ctx.drawImage(
+                pos.image,
+                pos.x,
+                pos.y,
+                pos.w,
+                pos.h,
+                x * this.tileSize,
+                y * this.tileSize,
+                this.tileSize,
+                this.tileSize
+            )
+        }
+        if (this.showGridLines) {
+            this.box(
+                x * this.tileSize,
+                y * this.tileSize,
+                this.tileSize,
+                this.tileSize,
+                'darkgrey'
+            )
+        }
+    };
+
     this.grid = function () {
-        let layer = this.map.layers[0];
-        for (let x = 0; x < layer.width; x++) {
-            for (let y = 0; y < layer.height; y++) {
-                let pos = this.getTile(layer.data[x + y * layer.width]);
-                if (pos !== undefined) {
-                    this.ctx.drawImage(
-                        pos.image,
-                        pos.x,
-                        pos.y,
-                        pos.w,
-                        pos.h,
-                        x * this.tileSize,
-                        y * this.tileSize,
-                        this.tileSize,
-                        this.tileSize
-                    )
-                }
-                if (this.showGridLines) {
-                    this.box(
-                        x * this.tileSize,
-                        y * this.tileSize,
-                        this.tileSize,
-                        this.tileSize,
-                        'darkgrey'
-                    )
+        for (let current = 0; current < this.map.layers.length; current++) {
+            let layer = this.map.layers[current];
+            for (let y = 0; y < layer.width; y++) {
+                for (let x = 0; x < layer.height; x++) {
+                    this.drawTile(x, y, layer)
                 }
             }
         }
@@ -153,16 +166,16 @@ function TileMap(canvas, blob) {
     };
 
     this.highlight = function (posX, posY) {
-        let cell = this.getCell(posX, posY);
+        this.highlighted = this.getCell(posX, posY);
         this.render();
         this.box(
-            cell.x * this.tileSize,
-            cell.y * this.tileSize,
+            this.highlighted.x * this.tileSize,
+            this.highlighted.y * this.tileSize,
             this.tileSize,
             this.tileSize,
             'red'
         );
-        document.getElementById('coords').innerText = cell.x + ', ' + cell.y;
+        document.getElementById('coords').innerText = this.highlighted.x + ', ' + this.highlighted.y;
     };
 }
 
@@ -207,6 +220,5 @@ window.addEventListener('load', function () {
     get('/static/maps/example.json', function (response) {
         let app = new Application(JSON.parse(response));
         app.tilemap.render();
-        app.tilemap.highlight(0, 0);
     });
 });
