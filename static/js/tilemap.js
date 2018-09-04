@@ -155,13 +155,13 @@ function TileMap(canvas, blob) {
         this.box(0, 0, this.canvas.width, this.canvas.height);
         this.grid();
         if (this.highlighted.x !== -1 && this.highlighted.y !== -1) {
-                    this.box(
-            this.highlighted.x * this.tileSize,
-            this.highlighted.y * this.tileSize,
-            this.tileSize,
-            this.tileSize,
-            'red'
-        );
+            this.box(
+                this.highlighted.x * this.tileSize,
+                this.highlighted.y * this.tileSize,
+                this.tileSize,
+                this.tileSize,
+                'red'
+            );
         }
     };
 
@@ -174,20 +174,26 @@ function TileMap(canvas, blob) {
     this.highlight = function (posX, posY) {
         this.highlighted = this.getCell(posX, posY);
         this.render();
-        document.getElementById('coords').innerText = this.highlighted.x + ', ' + this.highlighted.y;
+        document.getElementById('coords').innerText =
+            Math.round(this.highlighted.x) + ', ' + Math.round(this.highlighted.y);
     };
 }
 
 function Application(blob) {
     this.canvas = document.getElementById('application');
-    this.canvas.width = blob.width * blob.tilewidth;
-    this.canvas.height = blob.height * blob.tileheight;
+    let square = this.canvas.clientWidth;
+    this.canvas.width = square;
+    this.canvas.height = square;
 
     this.tilemap = new TileMap(this.canvas, blob);
 
     this.resize = function () {
         let self = this;
         return function () {
+            let square = self.canvas.clientWidth;
+            self.canvas.width = square;
+            self.canvas.height = square;
+            self.tilemap.tileSize = Math.ceil(self.canvas.clientWidth / self.tilemap.map.width);
             self.tilemap.render();
         }
     };
@@ -218,6 +224,6 @@ function Application(blob) {
 window.addEventListener('load', function () {
     get('/static/maps/example.json', function (response) {
         let app = new Application(JSON.parse(response));
-        app.tilemap.render();
+        app.resize()();
     });
 });

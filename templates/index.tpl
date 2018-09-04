@@ -1,8 +1,9 @@
 {% extends 'base.tpl' %}
 {% block content %}
-    <div class="container-fluid">
+    <div class="container">
         <div class="card-deck">
             <div class="card shadow-sm">
+                <canvas id="application" class="card-img-top"></canvas>
                 <div class="card-header"><h5>Tiled Game Map</h5></div>
                 <div class="card-body">
                     <div class="card-text">
@@ -12,23 +13,27 @@
                     <a href="/static/img/fantasy.png">Tile Set</a>
                     <br>
                 </div>
-                <div class="app-container card-footer">
-                    <input id="grid-lines" type="checkbox">
-                    <label for="grid-lines">
-                        Show Grid Lines
-                    </label>
-                    <br>
-                    Selected Tile: <br><span id="coords">0, 0</span>
-                    <canvas id="application" width="320" height="320"></canvas>
-                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <input id="grid-lines" type="checkbox">
+                        <label for="grid-lines">
+                            Show Grid Lines
+                        </label>
+                    </li>
+                    <li class="list-group-item">
+                        Selected Tile: <br><span id="coords">0, 0</span>
+                    </li>
+                </ul>
+
             </div>
             <div class="card shadow-sm">
+                <canvas id="dice" width="500" height="500" class="card-img-top"></canvas>
                 <div class="card-header"><h5>3D Dice Roller</h5></div>
                 <div class="card-body">
-                    This is an example dice roller
-                </div>
-                <div class="app-container card-footer">
-                    <canvas id="dice" width="320" height="320"></canvas>
+                    <div class="card-text">
+                        This is an example dice roller made with <a href="https://threejs.org/">three.js</a> a 3D
+                        graphics framework for JavaScript
+                    </div>
                 </div>
             </div>
         </div>

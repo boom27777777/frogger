@@ -5,8 +5,6 @@ function DiceApplication() {
         canvas: this.canvas,
         antialias: true
     });
-    this.canvas.width = 320;
-    this.canvas.height = 320;
 
     // this.container.innerHTML = '';
     // this.container.appendChild(this.renderer.domElement);
