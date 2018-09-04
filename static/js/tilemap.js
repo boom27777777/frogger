@@ -46,6 +46,8 @@ function TileMap(canvas, blob) {
     this.height = this.map.height;
     this.width = this.map.width;
 
+    this.showGridLines = false;
+
     this.line = function (startX, startY, endX, endY) {
         this.ctx.beginPath();
         this.ctx.moveTo(startX, startY);
@@ -53,7 +55,10 @@ function TileMap(canvas, blob) {
         this.ctx.stroke();
     };
 
-    this.box = function (x, y, w, h) {
+    this.box = function (x, y, w, h, color) {
+        if (color === undefined) color = 'black';
+
+        this.ctx.strokeStyle = color;
         this.ctx.strokeRect(x, y, w, h);
         this.ctx.stroke()
     };
@@ -111,6 +116,15 @@ function TileMap(canvas, blob) {
                         this.tileSize
                     )
                 }
+                if (this.showGridLines) {
+                    this.box(
+                        x * this.tileSize,
+                        y * this.tileSize,
+                        this.tileSize,
+                        this.tileSize,
+                        'darkgrey'
+                    )
+                }
             }
         }
     };
@@ -141,9 +155,13 @@ function TileMap(canvas, blob) {
     this.highlight = function (posX, posY) {
         let cell = this.getCell(posX, posY);
         this.render();
-        this.ctx.strokeStyle = 'red';
-        this.box(cell.x * this.tileSize, cell.y * this.tileSize, this.tileSize, this.tileSize);
-        this.ctx.strokeStyle = 'black';
+        this.box(
+            cell.x * this.tileSize,
+            cell.y * this.tileSize,
+            this.tileSize,
+            this.tileSize,
+            'red'
+        );
         document.getElementById('coords').innerText = cell.x + ', ' + cell.y;
     };
 }
@@ -172,13 +190,23 @@ function Application(blob) {
         }
     };
 
+    this.grindLines = function () {
+        let self = this;
+        return function () {
+            self.tilemap.showGridLines = this.checked;
+            self.tilemap.render();
+        }
+    };
+
     window.addEventListener('resize', this.resize());
     this.canvas.addEventListener('mousemove', this.mouseMove());
+    document.getElementById('grid-lines').addEventListener('input', this.grindLines())
 }
 
-window.onload = function () {
+window.addEventListener('load', function () {
     get('/static/maps/example.json', function (response) {
         let app = new Application(JSON.parse(response));
         app.tilemap.render();
+        app.tilemap.highlight(0, 0);
     });
-};
+});
