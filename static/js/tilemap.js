@@ -22,10 +22,15 @@ function Lock(number, callback) {
 
 let images = {};
 function tileImage(path) {
-    let image = new Image();
-    image.src = '/static/maps/' + path;
-    if (images[image.src] === undefined) {
-        images[image.src] = image;
+    let realPath = '/static/maps/' + path;
+    let image;
+    if (images[realPath] !== undefined) {
+        image = images[realPath];
+    }
+    else {
+        image = new Image();
+        image.src = '/static/maps/' + path;
+        images[realPath] = image
     }
     return image;
 }
@@ -63,8 +68,9 @@ function TileMap(canvas, blob) {
                 self.tileSets[tileset.firstgid] = JSON.parse(response);
 
                 // Preload image
-                tileImage(self.tileSets[tileset.firstgid].image);
-                lock.unlock();
+                tileImage(self.tileSets[tileset.firstgid].image).onload = function () {
+                    lock.unlock();
+                };
             })
         });
     };
@@ -122,6 +128,7 @@ function TileMap(canvas, blob) {
         };
 
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.box(0, 0, this.canvas.width, this.canvas.height);
         this.grid();
     };
 

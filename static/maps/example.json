@@ -21,11 +21,8 @@
         {
          "firstgid":1,
          "source":"fantasy.json"
-        }, 
-        {
-         "firstgid":668,
-         "source":"debug.json"
-        }],
+        }
+  ],
  "tilewidth":32,
  "type":"map",
  "version":1,
