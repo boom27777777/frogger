@@ -40,5 +40,6 @@
     </div>
     <script src="/static/js/tilemap.js"></script>
     <script src="/static/js/three.min.js"></script>
+    <script src="/static/js/cannon.js"></script>
     <script src="/static/js/dice.js"></script>
 {% endblock %}
