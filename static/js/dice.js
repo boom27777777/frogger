@@ -201,10 +201,18 @@ function DiceApplication(numDice) {
     }
 }
 
+window.addEventListener('load', function (evt) {
+   document.getElementById('roll-dice').dispatchEvent(new Event('click'));
+
+});
+
 document.getElementById('roll-dice').addEventListener('click', function () {
     let app = new DiceApplication(document.getElementById('num-dice').value);
     app.run(function (results) {
         document.getElementById('dice-results').innerText = 'You Rolled: ' + results;
+        document.getElementById('dice-total').innerText = ' Total: ' + results.reduce(function (a, b) {
+            return a + b;
+        });
     });
 });
 

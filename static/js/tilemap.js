@@ -88,7 +88,15 @@ function TileMap(canvas, blob) {
     };
 
     this.getTile = function (tileGID) {
-        let tileSet = this.tileSets[1]; //TODO: Determine the tile set a GID belongs to
+        let tileSet;
+        let offset = 0;
+        if (tileGID >= 668) {
+            tileSet = this.tileSets[668];
+            offset = 667;
+        }
+        else {
+            tileSet = this.tileSets[1]; //TODO: Determine the tile set a GID belongs to
+        }
         let tileWidth = tileSet.tilewidth;
         let tileHeight = tileSet.tileheight;
         let image;
@@ -99,8 +107,8 @@ function TileMap(canvas, blob) {
             return
         }
 
-        let x = (tileGID - 1) % tileSet.columns * tileWidth;
-        let y = Math.floor((tileGID - 1) / tileSet.columns) * tileHeight;
+        let x = (tileGID - offset - 1) % tileSet.columns * tileWidth;
+        let y = Math.floor((tileGID - offset - 1) / tileSet.columns) * tileHeight;
 
         return {x: x, y: y, w: tileWidth, h: tileHeight, image: image}
     };
@@ -219,8 +227,26 @@ function Application(blob) {
         }
     };
 
+    this.mouseoverGridlines = function () {
+        let self = this;
+        return function () {
+            self.tilemap.showGridLines = true;
+            self.tilemap.render();
+        }
+    };
+
+    this.mouseoutGridlines = function () {
+        let self = this;
+        return function () {
+            self.tilemap.showGridLines = false;
+            self.tilemap.render();
+        }
+    };
+
     window.addEventListener('resize', this.resize());
-    this.canvas.addEventListener('mousemove', this.mouseMove());
+    this.canvas.addEventListener('click', this.mouseMove());
+    this.canvas.addEventListener('mouseover', this.mouseoverGridlines());
+    this.canvas.addEventListener('mouseout', this.mouseoutGridlines());
     document.getElementById('grid-lines').addEventListener('input', this.grindLines())
 }
 

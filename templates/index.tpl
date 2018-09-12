@@ -41,6 +41,7 @@
                     </label></li>
                     <li class="list-group-item"><button id="roll-dice" class="btn btn-outline-primary">Roll the Dice!</button></li>
                     <li id="dice-results" class="list-group-item">You Rolled: </li>
+                    <li id="dice-total" class="list-group-item">Total: </li>
                 </ul>
             </div>
         </div>

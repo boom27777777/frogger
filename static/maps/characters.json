@@ -1,0 +1,12 @@
+{ "columns":4,
+ "image":"..\/img\/characters.png",
+ "imageheight":32,
+ "imagewidth":128,
+ "margin":0,
+ "name":"characters",
+ "spacing":0,
+ "tilecount":4,
+ "tileheight":32,
+ "tilewidth":32,
+ "type":"tileset"
+}
