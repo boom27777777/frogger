@@ -35,6 +35,10 @@
                         graphics framework for JavaScript
                     </div>
                 </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><button id="roll-dice" class="btn btn-outline-primary">Roll the Dice!</button></li>
+                    <li id="dice-results" class="list-group-item">You Rolled: </li>
+                </ul>
             </div>
         </div>
     </div>

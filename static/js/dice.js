@@ -81,6 +81,7 @@ function Ground(x, y, z) {
 
 function DiceApplication() {
     this.running = true;
+    this.results = [];
     this.canvas = document.getElementById('dice');
     this.renderer = new THREE.WebGLRenderer({
         canvas: this.canvas,
@@ -163,8 +164,8 @@ function DiceApplication() {
         if (done) {
             this.running = false;
             this.dice.forEach(function (die) {
-                console.log(die.getUpsideValue())
-            })
+                this.results.push(die.getUpsideValue())
+            }, this)
         }
     };
 
@@ -174,7 +175,10 @@ function DiceApplication() {
 
     let self = this;
     let last = Date.now();
-    this.run = function () {
+    this.run = function (callback) {
+        if (self.callback === undefined) {
+            self.callback = callback;
+        }
         var now = Date.now();
         var dt = now - last;
         last = now;
@@ -186,11 +190,16 @@ function DiceApplication() {
         if (self.running) {
             requestAnimationFrame(self.run);
         }
+        else {
+            self.callback(self.results);
+        }
     }
 }
 
-window.addEventListener('load', function () {
+document.getElementById('roll-dice').addEventListener('click', function () {
     let app = new DiceApplication();
-    app.run();
+    app.run(function (results) {
+        document.getElementById('dice-results').innerText = 'You Rolled: ' + results;
+    });
 });
 
