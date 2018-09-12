@@ -27,7 +27,7 @@ function Die(x, y, z) {
         Math.random(),
         Math.random(),
         Math.random()
-    ), -Math.PI / 2);
+    ), Math.random() * Math.PI - Math.PI / 2);
 
     this.update = function () {
         this.mesh.position.copy(this.body.position);
@@ -49,7 +49,6 @@ function Die(x, y, z) {
         let closest_angle = Math.PI * 2;
         for (let i = 0; i < this.mesh.geometry.faces.length; ++i) {
             let face = this.mesh.geometry.faces[i];
-            // if (face.materialIndex === 0) continue;
 
             let angle = face.normal.clone().applyQuaternion(this.body.quaternion).angleTo(vector);
             if (angle < closest_angle) {
@@ -79,7 +78,7 @@ function Ground(x, y, z) {
     }
 }
 
-function DiceApplication() {
+function DiceApplication(numDice) {
     this.running = true;
     this.results = [];
     this.canvas = document.getElementById('dice');
@@ -109,20 +108,26 @@ function DiceApplication() {
     this.world.bodies.push(this.ground.body);
     this.scene.add(this.ground.mesh);
 
-    this.dice = [
-        new Die(0, 2, 2),
-        new Die(3, 2, 2),
-        new Die(-3, 2, 2)
-    ];
+    this.dice = [];
+    let half = 1;
+    for (let i = 0; i < numDice; i++) {
+        let x = (half - i % 3) * 3;
+        let y = 3;
+        let z = Math.round(i / 3) * 3;
+
+        this.dice.push(
+            new Die(x, y, z)
+        )
+    }
 
     this.dice.forEach(function (die) {
         this.scene.add(die.mesh);
         this.world.bodies.push(die.body);
-        die.body.velocity.z = -4;
+        die.body.velocity.z = -3;
         die.body.angularVelocity.set(
-            Math.random() * 5,
-            Math.random() * 5,
-            Math.random() * 5,
+            Math.random() * 10,
+            Math.random() * 10,
+            Math.random() * 10,
         );
     }, this);
 
@@ -179,8 +184,8 @@ function DiceApplication() {
         if (self.callback === undefined) {
             self.callback = callback;
         }
-        var now = Date.now();
-        var dt = now - last;
+        let now = Date.now();
+        let dt = now - last;
         last = now;
 
         // self.animate(dt);
@@ -197,7 +202,7 @@ function DiceApplication() {
 }
 
 document.getElementById('roll-dice').addEventListener('click', function () {
-    let app = new DiceApplication();
+    let app = new DiceApplication(document.getElementById('num-dice').value);
     app.run(function (results) {
         document.getElementById('dice-results').innerText = 'You Rolled: ' + results;
     });

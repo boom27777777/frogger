@@ -36,6 +36,9 @@
                     </div>
                 </div>
                 <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><label>
+                        <input id="num-dice" type="number" value="3" max="6"> Number of Dice
+                    </label></li>
                     <li class="list-group-item"><button id="roll-dice" class="btn btn-outline-primary">Roll the Dice!</button></li>
                     <li id="dice-results" class="list-group-item">You Rolled: </li>
                 </ul>
